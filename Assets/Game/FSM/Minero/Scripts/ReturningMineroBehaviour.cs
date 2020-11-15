@@ -10,16 +10,28 @@ public class ReturningMineroBehaviour : BaseMineroBehaviour
     private Vector3 scaleAnim = Vector3.one;
     private Vector3 LimitScaleAnim = new Vector3(1.5f, 1.5f);
     bool switchAnim;
+    public bool returnBase = false;
+    public GameObject rock;
+    [SerializeField] private float timeToChangeState = 10;
+    public float time = 0;
+
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
         inMovement = false;
+        returnBase = true;
+        animator.ResetTrigger("ToIdle");
+        animator.ResetTrigger("ToPatrol");
+        animator.ResetTrigger("ToMinning");
+        animator.ResetTrigger("ToReturning");
+        animator.ResetTrigger("ToIdleReturning");
+        animator.ResetTrigger("ToMinningReturning");
     }
 
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
+        
         if (!inMovement)
         {
             inMovement = true;
@@ -39,12 +51,17 @@ public class ReturningMineroBehaviour : BaseMineroBehaviour
             owner.gameObject.GetComponent<CharacterPathfindingMovementHandler>().colRotation(new Vector3(x * 10, y * 10) + Vector3.one * 5f);
 
         }
-      
-        if (gold == maxGold)
+        if (time > timeToChangeState)
         {
-            gold = 0;
-            animator.SetTrigger(hashToReturning);
+            time += Time.deltaTime;
+            owner.gameObject.transform.localScale = Vector3.one;
+            animator.GetBehaviour<ReturningMineroBehaviour>().gold = gold;
+            animator.SetTrigger(hashToIdleReturning);
         }
+        /* if (gold == maxGold)
+         {
+             animator.SetTrigger(hashToReturning);
+         }*/
 
     }
 }

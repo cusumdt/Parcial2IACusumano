@@ -12,13 +12,14 @@ public class BaseMineroBehaviour : StateMachineBehaviour
     protected int hashToPatrol = Animator.StringToHash("ToPatrol");
     protected int hashToMinning = Animator.StringToHash("ToMinning");
     protected int hashToReturning = Animator.StringToHash("ToReturning");
-
+    protected int hashToIdleReturning = Animator.StringToHash("ToIdleReturning");
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if (!owner)
         {
             owner = animator.gameObject;
+         
         }
     }
 

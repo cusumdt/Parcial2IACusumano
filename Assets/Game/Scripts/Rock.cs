@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rock : MonoBehaviour
 {
-    [SerializeField] private bool detected = false;
+    public bool detected = false;
     public int gold = 20;
     public float time = 0f;
     private void Update()
@@ -13,6 +13,7 @@ public class Rock : MonoBehaviour
         {
             gold = 20;
             detected = false;
+            RockSpot.rocksOn--;
             this.gameObject.SetActive(false);
         }
     }
@@ -24,13 +25,10 @@ public class Rock : MonoBehaviour
         {
             if (detected)
             {
-                /* RockSpot.spawn = true;
-                 detected = false;
-                 this.gameObject.SetActive(false);*/
-                Debug.Log("A minar kpo");
                 var comp = other.transform.parent.gameObject.GetComponent<Animator>();
                 comp.SetTrigger("ToMinning");
                 comp.GetBehaviour<MinningMineroBehaviour>().ObjectPos = transform.position;
+                comp.GetBehaviour<MinningMineroBehaviour>().rock = this.gameObject;
             }
         }
         if (other.gameObject.tag == "Minero")
@@ -65,6 +63,7 @@ public class Rock : MonoBehaviour
         {
             var comp = other.transform.parent.gameObject.GetComponent<Animator>();
             detected = true;
+            RockSpot.rocksOn--;
         }
       
         if (other.gameObject.tag == "Rock")
@@ -82,7 +81,6 @@ public class Rock : MonoBehaviour
       
                 if (time >= 1.0f)
                 {
-                    Debug.Log("Holaaa");
                     var comp = other.transform.parent.gameObject.GetComponent<Animator>();
                     gold--;
                     comp.GetBehaviour<MinningMineroBehaviour>().gold++;
