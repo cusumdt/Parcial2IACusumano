@@ -10,6 +10,7 @@ public class PatrolMineroBehaviour : BaseMineroBehaviour
     [SerializeField] private Vector3 randomPosition;
     [SerializeField] private float timeToChangeState = 5;
     private bool inMovement = false;
+    private float time;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -30,7 +31,7 @@ public class PatrolMineroBehaviour : BaseMineroBehaviour
             Testing.pathfinding.GetGrid().GetXY(randomPosition, out int x, out int y);
             //List<PathNode> path = pathfinding.FindPath(0, 0, x, y);
             List<PathNode> path = Testing.pathfinding.FindPath(0, 0, x, y);
-            Debug.Log(x + ", " + y);
+
             if (path != null)
             {
                 for (int i = 0; i < path.Count - 1; i++)
@@ -42,11 +43,13 @@ public class PatrolMineroBehaviour : BaseMineroBehaviour
          
             owner.gameObject.GetComponent<CharacterPathfindingMovementHandler>().colRotation(new Vector3(x*10,y*10) + Vector3.one * 5f);
         }
-        if (Time.time - lastChange > timeToChangeState)
+        if (time > timeToChangeState)
         {
-            lastChange = Time.time;
+            time = 0;
             animator.SetTrigger(hashToIdle);
         }
+        time += Time.deltaTime;
+            
     }
 
  

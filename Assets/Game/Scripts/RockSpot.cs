@@ -13,6 +13,7 @@ public class RockSpot : MonoBehaviour
     public GameObject[] rocks;
     const int limitRocks = 3;
     public int rockscant = 0;
+    private bool spawnSpot = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +23,8 @@ public class RockSpot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        StartCoroutine("SpawnTime");
+        if(spawnSpot)
+            StartCoroutine("SpawnTime");
     }
 
     public void SpawnRock()
@@ -58,16 +60,32 @@ public class RockSpot : MonoBehaviour
 
     private IEnumerator SpawnTime()
     {
+        spawnSpot = false;
         yield return new WaitForSeconds(2.0f);
         SpawnRock();
+        spawnSpot = true;
     }
 
     private IEnumerator SpawnRockTime(int i)
     {
         yield return new WaitForSeconds(4.0f);
+
         rocks[i].SetActive(true);
+        Spawn(i);
+    }
+
+    private void Spawn(int i)
+    {
         randomPosition = new Vector3(Random.Range(0, width * 10), Random.Range(0, height * 10));
         Testing.pathfinding.GetGrid().GetXY(randomPosition, out int x, out int y);
-        rocks[i].transform.position = new Vector3(x * 10, y * 10) + Vector3.one * 5f;
+        List<PathNode> path = Testing.pathfinding.FindPath(0, 0, x, y);
+        if (path != null)
+            rocks[i].transform.position = new Vector3(x * 10, y * 10) + Vector3.one * 5f;
+        else
+        {
+            Spawn(i);
+        }
     }
+
+
 }

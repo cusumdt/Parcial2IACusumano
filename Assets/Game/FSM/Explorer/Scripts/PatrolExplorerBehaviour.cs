@@ -9,7 +9,8 @@ public class PatrolExplorerBehaviour : BaseExplorerBehaviour
     [SerializeField] private int height;
     [SerializeField] private Vector3 randomPosition;
     private bool inMovement = false;
-
+    const int timeToChangeState = 5;
+    private float time;
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
@@ -26,9 +27,7 @@ public class PatrolExplorerBehaviour : BaseExplorerBehaviour
             randomPosition = new Vector3(Random.Range(0, width * 10), Random.Range(0, height * 10));
             Vector3 mouseWorldPosition = UtilsClass.GetMouseWorldPosition();
             Testing.pathfinding.GetGrid().GetXY(randomPosition, out int x, out int y);
-            //List<PathNode> path = pathfinding.FindPath(0, 0, x, y);
             List<PathNode> path = Testing.pathfinding.FindPath(0, 0, x, y);
-            Debug.Log(x + ", " + y);
             if (path != null)
             {
                 for (int i = 0; i < path.Count - 1; i++)
@@ -40,7 +39,12 @@ public class PatrolExplorerBehaviour : BaseExplorerBehaviour
          
             owner.gameObject.GetComponent<CharacterPathfindingMovementHandler>().colRotation(new Vector3(x*10,y*10) + Vector3.one * 5f);
         }
-         animator.SetTrigger(hashToIdle);
+        if (time > timeToChangeState)
+        {
+            time = 0;
+            animator.SetTrigger(hashToIdle);
+        }
+        time += Time.deltaTime;
     }
 
  

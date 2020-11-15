@@ -28,7 +28,6 @@ public class MarkingExplorerBehaviour : BaseMineroBehaviour
             Testing.pathfinding.GetGrid().GetXY(ObjectPos, out int x, out int y);
             //List<PathNode> path = pathfinding.FindPath(0, 0, x, y);
             List<PathNode> path = Testing.pathfinding.FindPath(0, 0, x, y);
-            Debug.Log(x + ", " + y);
             if (path != null)
             {
                 for (int i = 0; i < path.Count - 1; i++)
