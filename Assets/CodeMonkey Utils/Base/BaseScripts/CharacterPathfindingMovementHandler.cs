@@ -10,6 +10,7 @@
     --------------------------------------------------
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,13 +20,16 @@ using CodeMonkey.Utils;
 public class CharacterPathfindingMovementHandler : MonoBehaviour {
 
     private const float speed = 40f;
-
+    private static readonly Vector3 vector3Down = new Vector3(0, -1);
     private V_UnitSkeleton unitSkeleton;
     private V_UnitAnimation unitAnimation;
     private AnimatedWalker animatedWalker;
     private int currentPathIndex;
     private List<Vector3> pathVectorList;
-
+    private const float MathfRad2Deg = Mathf.Rad2Deg;
+    [SerializeField] GameObject col;
+    Quaternion qt = Quaternion.identity;
+    Vector3 target = Vector3.zero;
 
     private void Start() {
         Transform bodyTransform = transform.Find("Body");
@@ -41,6 +45,10 @@ public class CharacterPathfindingMovementHandler : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             SetTargetPosition(UtilsClass.GetMouseWorldPosition());
         }
+        Vector3 vectorToTarget = target - col.transform.position;
+        float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg;
+        qt = Quaternion.AngleAxis(angle, Vector3.forward);
+        col.transform.rotation = Quaternion.RotateTowards(col.transform.rotation, qt, Time.deltaTime * 1000f);
     }
     
     private void HandleMovement() {
@@ -48,7 +56,6 @@ public class CharacterPathfindingMovementHandler : MonoBehaviour {
             Vector3 targetPosition = pathVectorList[currentPathIndex];
             if (Vector3.Distance(transform.position, targetPosition) > 1f) {
                 Vector3 moveDir = (targetPosition - transform.position).normalized;
-
                 float distanceBefore = Vector3.Distance(transform.position, targetPosition);
                 animatedWalker.SetMoveVector(moveDir);
                 transform.position = transform.position + moveDir * speed * Time.deltaTime;
@@ -79,6 +86,22 @@ public class CharacterPathfindingMovementHandler : MonoBehaviour {
         if (pathVectorList != null && pathVectorList.Count > 1) {
             pathVectorList.RemoveAt(0);
         }
+    }
+
+    public void colRotation(Vector3 _target)
+    {
+        target = _target;
+    }
+
+    public static double GetAngleFromVector(Vector3 dir)
+    {
+        if (dir.x == 0f && dir.y == 0f) dir = vector3Down;
+
+        double n = Math.Atan2(dir.y, dir.x) * MathfRad2Deg;
+        if (n < 0) n += 360;
+        int angle = (int)Math.Round(n / 45);
+
+        return n;
     }
 
 }
