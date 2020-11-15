@@ -8,6 +8,7 @@ public class PatrolMineroBehaviour : BaseMineroBehaviour
     [SerializeField] private int width;
     [SerializeField] private int height;
     [SerializeField] private Vector3 randomPosition;
+    [SerializeField] private float timeToChangeState = 5;
     private bool inMovement = false;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -15,6 +16,7 @@ public class PatrolMineroBehaviour : BaseMineroBehaviour
         base.OnStateEnter(animator, stateInfo, layerIndex);
         randomPosition = Vector3.zero;
         inMovement = false;
+      //  lastChange = Time.time;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -40,7 +42,11 @@ public class PatrolMineroBehaviour : BaseMineroBehaviour
          
             owner.gameObject.GetComponent<CharacterPathfindingMovementHandler>().colRotation(new Vector3(x*10,y*10) + Vector3.one * 5f);
         }
-         animator.SetTrigger(hashToIdle);
+        if (Time.time - lastChange > timeToChangeState)
+        {
+            lastChange = Time.time;
+            animator.SetTrigger(hashToIdle);
+        }
     }
 
  

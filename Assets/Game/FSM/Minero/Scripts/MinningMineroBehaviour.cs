@@ -1,27 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CodeMonkey.Utils;
-using CodeMonkey;
-public class MarkingExplorerBehaviour : BaseMineroBehaviour
+
+public class MinningMineroBehaviour : BaseMineroBehaviour
 {
-   
     private bool inMovement = false;
     public Vector3 ObjectPos = Vector3.zero;
-    [SerializeField] private float timeToChangeState = 5;
-    public bool marking = false;
+    [SerializeField] private int maxGold = 5;
+    private Vector3 scaleAnim = Vector3.one;
+    private Vector3 LimitScaleAnim = new Vector3(1.5f, 1.5f);
+    bool switchAnim;
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
         inMovement = false;
-        marking = true;
-       // lastChange = Time.time;
     }
-
 
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+
         if (!inMovement)
         {
             inMovement = true;
@@ -39,12 +37,27 @@ public class MarkingExplorerBehaviour : BaseMineroBehaviour
             owner.gameObject.GetComponent<CharacterPathfindingMovementHandler>().SetTargetPosition(ObjectPos);
 
             owner.gameObject.GetComponent<CharacterPathfindingMovementHandler>().colRotation(new Vector3(x * 10, y * 10) + Vector3.one * 5f);
+
         }
-        if (Time.time - lastChange > timeToChangeState)
+        else 
+        { 
+            if (scaleAnim.x > LimitScaleAnim.x && scaleAnim.y > LimitScaleAnim.y)
+                switchAnim = true;
+            else if (scaleAnim.x < 1.0f && scaleAnim.y < 1.0f)
+                switchAnim = false;
+
+            if (switchAnim)
+                scaleAnim = new Vector3(scaleAnim.x - Time.deltaTime, scaleAnim.y - Time.deltaTime);
+            else
+                scaleAnim = new Vector3(scaleAnim.x + Time.deltaTime, scaleAnim.y + Time.deltaTime);
+
+            owner.gameObject.transform.localScale = scaleAnim;
+        }
+        if (gold == maxGold) 
         {
-            lastChange = Time.time;
-            marking = false;
-            animator.SetTrigger(hashToIdle);
+            owner.gameObject.transform.localScale = Vector3.one;
+            animator.SetTrigger(hashToReturning);
         }
+
     }
 }
