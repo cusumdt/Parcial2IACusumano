@@ -48,7 +48,7 @@ public class CharacterPathfindingMovementHandler : MonoBehaviour {
         Vector3 vectorToTarget = target - col.transform.position;
         float angle = Mathf.Atan2(vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg;
         qt = Quaternion.AngleAxis(angle, Vector3.forward);
-        col.transform.rotation = Quaternion.RotateTowards(col.transform.rotation, qt, Time.deltaTime * 1000f);
+        col.transform.rotation = Quaternion.RotateTowards(col.transform.rotation, qt, Time.deltaTime * 1000);
     }
     
     private void HandleMovement() {
