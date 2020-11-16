@@ -21,6 +21,7 @@ public class BaseDetect : MonoBehaviour
                     comp.GetBehaviour<ReturningMineroBehaviour>().gold = 0;
                     comp.SetTrigger("ToMinningReturning");
                     coins.text = goldBase.ToString();
+
                 }
                 else 
                 {
