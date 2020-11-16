@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BaseDetect : MonoBehaviour
 {
+    public Text coins;
     [SerializeField] private int goldBase;
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -18,6 +20,7 @@ public class BaseDetect : MonoBehaviour
                     goldBase += comp.GetBehaviour<ReturningMineroBehaviour>().gold;
                     comp.GetBehaviour<ReturningMineroBehaviour>().gold = 0;
                     comp.SetTrigger("ToMinningReturning");
+                    coins.text = goldBase.ToString();
                 }
                 else 
                 {
