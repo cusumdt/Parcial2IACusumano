@@ -83,7 +83,7 @@ public class RockSpot : MonoBehaviour
             rocks[i].transform.position = new Vector3(x * 10, y * 10) + Vector3.one * 5f;
         else
         {
-            Spawn(i);
+            rocks[i].SetActive(false);
         }
     }
 
