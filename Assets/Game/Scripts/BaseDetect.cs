@@ -25,6 +25,8 @@ public class BaseDetect : MonoBehaviour
                 }
                 else 
                 {
+                    goldBase += comp.GetBehaviour<ReturningMineroBehaviour>().gold;
+                    comp.GetBehaviour<ReturningMineroBehaviour>().gold = 0;
                     comp.SetTrigger("ToIdleReturning");
                 }
             }
